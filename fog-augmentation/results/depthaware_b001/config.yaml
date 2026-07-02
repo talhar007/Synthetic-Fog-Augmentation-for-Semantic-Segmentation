@@ -1,0 +1,39 @@
+augmentation:
+  beta: 0.01
+  depth_method: simple
+  type: depth_aware
+data:
+  acdc_root: /home/taah3149/Documents/Group_Studies/dataset/acdc
+  batch_size: 4
+  cityscapes_root: /home/taah3149/Documents/Group_Studies/dataset/cityscapes
+  crop_size:
+  - 1024
+  - 512
+  img_size:
+  - 2048
+  - 1024
+  num_workers: 4
+  scale_range:
+  - 0.5
+  - 2.0
+  use_fog_cache: true
+evaluate:
+  split: val
+experiment:
+  description: "Depth-aware Koschmieder fog \u03B2=0.01 \u2014 moderate fog, visibility\
+    \ \u2248300m"
+  name: depthaware_b001
+  seed: 42
+model:
+  checkpoint: results/checkpoints/pretrained/deeplabv3plus_r101_cityscapes.pth
+  mmseg_config: configs/_base_/deeplabv3plus_r101.py
+  num_classes: 19
+training:
+  epochs: 50
+  log_interval: 50
+  lr: 6.0e-05
+  output_dir: results/depthaware_b001
+  poly_power: 1.0
+  resume: null
+  val_interval: 5
+  weight_decay: 0.01

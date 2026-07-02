@@ -1,0 +1,37 @@
+experiment:
+  name: baseline
+  seed: 42
+  description: "No fog augmentation — clear Cityscapes only (reference condition)"
+
+augmentation:
+  type: none           # options: none | photometric | depth_aware | combined
+
+model:
+  mmseg_config: configs/_base_/deeplabv3plus_r101.py
+  # Download pretrained checkpoint first:  python src/data/download.py
+  checkpoint: results/checkpoints/pretrained/deeplabv3plus_r101_cityscapes.pth
+  num_classes: 19
+
+data:
+  cityscapes_root: /home/taah3149/Documents/Group_Studies/dataset/cityscapes
+  acdc_root: /home/taah3149/Documents/Group_Studies/dataset/acdc
+  img_size: [2048, 1024]   # [W, H] full-res load size
+  crop_size: [1024, 512]   # [W, H] training crop (fits A5000 at batch 4)
+  scale_range: [0.5, 2.0]  # random resize range
+  batch_size: 4
+  num_workers: 4
+  use_fog_cache: false     # if true, load pre-rendered fog from data/fog_cache/
+
+training:
+  epochs: 50
+  lr: 6.0e-5
+  weight_decay: 0.01
+  poly_power: 1.0          # polynomial LR decay exponent
+  warmup_iters: 0
+  output_dir: results/baseline
+  val_interval: 5          # validate every N epochs (on Cityscapes val)
+  log_interval: 50         # log loss every N iters
+  resume: null             # path to checkpoint to resume from
+
+evaluate:
+  split: val               # 'val' uses ACDC fog val; 'test' → submit to ACDC server

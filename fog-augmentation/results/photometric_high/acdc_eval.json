@@ -1,0 +1,27 @@
+{
+  "mIoU": 0.03838999996474582,
+  "per_class": {
+    "road": 0.3668110982376776,
+    "sidewalk": 0.00011733310484815914,
+    "building": 0.05132782602682816,
+    "wall": 2.6533534027930715e-06,
+    "fence": 0.00249579388545431,
+    "pole": 0.005751550629427093,
+    "traffic light": 0.0,
+    "traffic sign": 0.07676523140584385,
+    "vegetation": 4.990293432738991e-05,
+    "terrain": 0.19336207188117152,
+    "sky": 0.002835010300277808,
+    "person": 0.00012953156355409895,
+    "rider": 0.0,
+    "car": 0.029244467657105425,
+    "truck": 1.6350734147963244e-05,
+    "bus": 6.325080932285566e-05,
+    "train": 0.00043792680678167873,
+    "motorcycle": 0.0,
+    "bicycle": 0.0
+  },
+  "experiment": "photometric_high",
+  "checkpoint": "results/photometric_high/best.pth",
+  "split": "val"
+}

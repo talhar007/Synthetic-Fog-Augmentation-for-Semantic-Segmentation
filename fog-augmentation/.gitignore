@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+*.pth
+*.ckpt
+*.egg-info/
+dist/
+build/
+.venv/
+.env
+
+# Data (never commit)
+data/cityscapes/
+data/acdc/
+data/foggy_cityscapes/
+data/fog_cache/
+
+# Results (large; keep only summary CSVs)
+results/checkpoints/
+results/logs/
+results/*.png
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/

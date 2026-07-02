@@ -1,0 +1,39 @@
+experiment:
+  name: combined
+  seed: 42
+  description: "Combined photometric + depth-aware fog (best settings from Phase 3-4 sweep).
+  Photometric medium overlaid on Koschmieder β=0.01."
+
+augmentation:
+  type: combined
+  photometric_intensity: medium   # RQ3: can stacking beat either alone?
+  beta: 0.010
+  depth_method: simple
+
+model:
+  mmseg_config: configs/_base_/deeplabv3plus_r101.py
+  checkpoint: results/checkpoints/pretrained/deeplabv3plus_r101_cityscapes.pth
+  num_classes: 19
+
+data:
+  cityscapes_root: /home/taah3149/Documents/Group_Studies/dataset/cityscapes
+  acdc_root: /home/taah3149/Documents/Group_Studies/dataset/acdc
+  img_size: [2048, 1024]
+  crop_size: [1024, 512]
+  scale_range: [0.5, 2.0]
+  batch_size: 4
+  num_workers: 4
+  use_fog_cache: true
+
+training:
+  epochs: 50
+  lr: 6.0e-5
+  weight_decay: 0.01
+  poly_power: 1.0
+  output_dir: results/combined
+  val_interval: 5
+  log_interval: 50
+  resume: null
+
+evaluate:
+  split: val

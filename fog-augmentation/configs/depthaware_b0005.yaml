@@ -1,0 +1,37 @@
+experiment:
+  name: depthaware_b0005
+  seed: 42
+  description: "Depth-aware Koschmieder fog β=0.005 — light fog, visibility ≈600m"
+
+augmentation:
+  type: depth_aware
+  beta: 0.005
+  depth_method: simple   # 'simple' (fast) or 'ransac' (Sakaridis-style)
+
+model:
+  mmseg_config: configs/_base_/deeplabv3plus_r101.py
+  checkpoint: results/checkpoints/pretrained/deeplabv3plus_r101_cityscapes.pth
+  num_classes: 19
+
+data:
+  cityscapes_root: /home/taah3149/Documents/Group_Studies/dataset/cityscapes
+  acdc_root: /home/taah3149/Documents/Group_Studies/dataset/acdc
+  img_size: [2048, 1024]
+  crop_size: [1024, 512]
+  scale_range: [0.5, 2.0]
+  batch_size: 4
+  num_workers: 4
+  use_fog_cache: true
+
+training:
+  epochs: 50
+  lr: 6.0e-5
+  weight_decay: 0.01
+  poly_power: 1.0
+  output_dir: results/depthaware_b0005
+  val_interval: 5
+  log_interval: 50
+  resume: null
+
+evaluate:
+  split: val

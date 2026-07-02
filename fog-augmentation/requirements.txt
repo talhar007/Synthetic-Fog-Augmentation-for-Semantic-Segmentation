@@ -1,0 +1,34 @@
+# Core ML
+torch>=2.0.0
+torchvision>=0.15.0
+
+# MMSegmentation stack — HPC only (requires nvcc / CUDA toolkit to build mmcv).
+# On the HPC: pip install mmcv -f https://download.openmmlab.com/mmcv/dist/cu124/torch2.5/index.html
+# Then: pip install mmsegmentation mmengine
+# mmcv>=2.1.0          # HPC only
+# mmsegmentation>=1.0.0 # HPC only
+# mmengine>=0.7.0       # HPC only
+
+# Image processing
+opencv-python>=4.7.0
+Pillow>=10.0.0
+scikit-image>=0.21.0
+
+# Augmentation
+albumentations>=1.3.0
+
+# Segmentation models (fallback / comparison)
+segmentation-models-pytorch>=0.3.3
+
+# Cityscapes utilities
+cityscapesScripts>=2.2.0
+
+# General utilities
+numpy>=1.24.0
+tqdm>=4.65.0
+matplotlib>=3.7.0
+PyYAML>=6.0
+
+# Optional: experiment tracking
+# wandb>=0.15.0
+# tensorboard>=2.13.0

@@ -1,0 +1,27 @@
+{
+  "mIoU": 0.03455932372205324,
+  "per_class": {
+    "road": 0.06321817002396461,
+    "sidewalk": 0.0,
+    "building": 0.07842283890603438,
+    "wall": 0.0,
+    "fence": 0.01814103292088967,
+    "pole": 0.0032972651907609367,
+    "traffic light": 0.02078475590917133,
+    "traffic sign": 0.13830015595703296,
+    "vegetation": 0.00012503103176544057,
+    "terrain": 0.041001198024344564,
+    "sky": 0.0,
+    "person": 0.028082819553794568,
+    "rider": 0.0,
+    "car": 0.13943694310188476,
+    "truck": 4.103198169426523e-06,
+    "bus": 0.0,
+    "train": 0.125812836901199,
+    "motorcycle": 0.0,
+    "bicycle": 0.0
+  },
+  "experiment": "combined",
+  "checkpoint": "results/combined/best.pth",
+  "split": "val"
+}
