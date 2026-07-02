@@ -7,7 +7,8 @@ append-mode logging and survives resumes intact, so it's the reliable source
 for full-history curves.
 
 Generates:
-  results/figures/training_curves.png — train loss + val mIoU vs epoch, all 11
+  results/figures/training_curves.png — train loss + val mIoU vs epoch, one
+  line per results/<experiment>/train.log found on disk (auto-discovered)
 
 Usage:
     python scripts/plot_training_curves.py
@@ -22,13 +23,13 @@ import matplotlib.pyplot as plt
 RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 FIG_DIR = RESULTS_DIR / "figures"
 
-EXPERIMENTS = [
-    "baseline",
-    "photometric_low", "photometric_med", "photometric_high",
-    "depthaware_b0005", "depthaware_b001", "depthaware_b002",
-    "combined",
-    "nn_depth_b0005", "nn_depth_b001", "nn_depth_b002",
-]
+
+def discover_experiments() -> list[str]:
+    """Every results/<name>/ with a train.log, baseline first — picks up
+    sweep results automatically instead of a hardcoded list going stale."""
+    names = sorted(p.parent.name for p in RESULTS_DIR.glob("*/train.log"))
+    return sorted(names, key=lambda n: (n != "baseline", n))
+
 
 _EPOCH_RE = re.compile(r"Epoch (\d+) complete — avg_loss=([\d.]+)")
 _VAL_RE = re.compile(r"val mIoU = ([\d.]+)")
@@ -53,16 +54,16 @@ def parse_log(log_path: Path):
     return epochs, losses, val_epochs, val_mious
 
 
-def plot_curves():
+def plot_curves(experiments: list[str]):
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-    cmap = plt.get_cmap("tab20")
+    cmap = plt.get_cmap("nipy_spectral")
 
-    for i, name in enumerate(EXPERIMENTS):
+    for i, name in enumerate(experiments):
         log_path = RESULTS_DIR / name / "train.log"
         if not log_path.exists():
             continue
         epochs, losses, val_epochs, val_mious = parse_log(log_path)
-        color = cmap(i / len(EXPERIMENTS))
+        color = cmap(i / max(len(experiments) - 1, 1))
         axes[0].plot(epochs, losses, label=name, color=color)
         axes[1].plot(val_epochs, val_mious, label=name, color=color, marker="o", markersize=3)
 
@@ -74,7 +75,7 @@ def plot_curves():
     axes[1].set_xlabel("Epoch")
     axes[1].set_ylabel("Cityscapes Val mIoU")
     axes[1].set_title("Validation mIoU (in-domain, Cityscapes val)")
-    axes[1].legend(fontsize=7, loc="lower right")
+    axes[1].legend(fontsize=6, loc="lower right", ncol=2)
 
     plt.tight_layout()
     out = FIG_DIR / "training_curves.png"
@@ -85,4 +86,4 @@ def plot_curves():
 
 if __name__ == "__main__":
     FIG_DIR.mkdir(parents=True, exist_ok=True)
-    plot_curves()
+    plot_curves(discover_experiments())

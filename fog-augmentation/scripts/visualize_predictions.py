@@ -8,6 +8,7 @@ Usage:
     python scripts/visualize_predictions.py --acdc-root /path/to/acdc --n 3
 """
 import argparse
+import csv
 import sys
 from pathlib import Path
 
@@ -27,14 +28,38 @@ from models import build_model, forward_eval
 MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
-# One representative experiment per technique family, plus baseline.
-EXPERIMENTS = [
+# Fallback when results/miou_table.csv doesn't exist yet (pre-compile_results.py run).
+_FALLBACK_EXPERIMENTS = [
     "baseline",
     "photometric_low",
     "depthaware_b0005",
     "nn_depth_b0005",
     "combined",
 ]
+
+
+def select_experiments(results_dir: Path) -> list[str]:
+    """baseline + the best-mIoU experiment per technique family, read from
+    miou_table.csv (written by compile_results.py, which now tags each row
+    with a `family` column) — keeps this figure showing the current champion
+    per family instead of a name hardcoded before the sweep existed."""
+    table_path = results_dir / "miou_table.csv"
+    if not table_path.exists():
+        return _FALLBACK_EXPERIMENTS
+
+    best_per_family: dict[str, tuple[str, float]] = {}
+    with open(table_path) as f:
+        for row in csv.DictReader(f):
+            if row["mIoU"] == "N/A":
+                continue
+            family, miou = row["family"], float(row["mIoU"])
+            if family == "baseline":
+                continue
+            if family not in best_per_family or miou > best_per_family[family][1]:
+                best_per_family[family] = (row["experiment"], miou)
+
+    names = ["baseline"] + [name for name, _ in best_per_family.values()]
+    return names
 
 
 def build_eval_transform() -> A.Compose:
@@ -65,7 +90,7 @@ def main():
 
     print("Loading models...")
     models = {}
-    for name in EXPERIMENTS:
+    for name in select_experiments(results_dir):
         ckpt = results_dir / name / "best.pth"
         if not ckpt.exists():
             print(f"  skip {name} (no checkpoint)")

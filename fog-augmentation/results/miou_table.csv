@@ -1,12 +1,12 @@
-experiment,mIoU
-baseline,0.4143
-photometric_low,0.2318
-photometric_med,0.0853
-photometric_high,0.0384
-depthaware_b0005,0.3807
-depthaware_b001,0.2734
-depthaware_b002,0.2275
-combined,0.0346
-nn_depth_b0005,0.3912
-nn_depth_b001,0.2667
-nn_depth_b002,0.2732
+experiment,mIoU,family,is_original
+baseline,0.4143,baseline,True
+combined,0.0346,combined,True
+depthaware_b0005,0.3807,depth_aware (stereo),True
+depthaware_b001,0.2734,depth_aware (stereo),True
+depthaware_b002,0.2275,depth_aware (stereo),True
+nn_depth_b0005,0.3912,nn_depth,True
+nn_depth_b001,0.2667,nn_depth,True
+nn_depth_b002,0.2732,nn_depth,True
+photometric_high,0.0384,photometric,True
+photometric_low,0.2318,photometric,True
+photometric_med,0.0853,photometric,True

@@ -156,16 +156,29 @@ class CityscapesDataset(Dataset):
         # set, layers a further (cheap, per-epoch-random) effect on top — used
         # by the "combined" condition to keep photometric variation alive while
         # reusing a cached depth-aware base.
-        if self.fog_cache_dir is not None:
-            city = s["img"].parent.name
-            stem = s["img"].stem.replace("_leftImg8bit", "")
-            cached_path = self.fog_cache_dir / self.split / city / f"{stem}.jpg"
-            cached = cv2.imread(str(cached_path))
-            if cached is None:
-                raise FileNotFoundError(f"Fog cache miss: {cached_path}")
-            result["image"] = cv2.cvtColor(cached, cv2.COLOR_BGR2RGB)
-        if self.fog_transform is not None:
-            result = self.fog_transform(result)
+        #
+        # fog_prob gates the whole block: with probability (1 - fog_prob) the
+        # sample is left as the clear image already loaded above (a genuine
+        # real/generated mix, rather than fog applied to every sample).
+        has_fog_source = (
+            self.fog_cache_dir is not None
+            or self.fog_cache_dirs is not None
+            or self.fog_transform is not None
+        )
+        if has_fog_source and (self.fog_prob >= 1.0 or random.random() < self.fog_prob):
+            cache_dir = self.fog_cache_dir
+            if self.fog_cache_dirs is not None:
+                cache_dir = random.choice(self.fog_cache_dirs)  # "mixed intensity"
+            if cache_dir is not None:
+                city = s["img"].parent.name
+                stem = s["img"].stem.replace("_leftImg8bit", "")
+                cached_path = cache_dir / self.split / city / f"{stem}.jpg"
+                cached = cv2.imread(str(cached_path))
+                if cached is None:
+                    raise FileNotFoundError(f"Fog cache miss: {cached_path}")
+                result["image"] = cv2.cvtColor(cached, cv2.COLOR_BGR2RGB)
+            if self.fog_transform is not None:
+                result = self.fog_transform(result)
 
         # --- geometric transforms (resize / crop / flip / normalize / ToTensor) ---
         if self.geo_transform is not None:

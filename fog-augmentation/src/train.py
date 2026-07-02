@@ -65,9 +65,18 @@ def deep_merge(base: dict, override: dict) -> dict:
 _BETA_SUFFIX = {0.005: "b0005", 0.010: "b001", 0.020: "b002"}
 
 
-def fog_cache_variant_name(aug_cfg: dict) -> str | None:
+def _nn_depth_prefix(aug_cfg: dict) -> str:
+    """'nn_depth_base' for the DepthAnythingV2-Base model, else the original
+    'nn_depth' (Small model) cache prefix — keeps the two caches separate."""
+    return "nn_depth_base" if "Base" in aug_cfg.get("model_id", "") else "nn_depth"
+
+
+def fog_cache_variant_names(aug_cfg: dict) -> list[str] | None:
     """
-    Map an augmentation config to its scripts/generate_fog.py cache directory name.
+    Map an augmentation config to its scripts/generate_fog.py cache directory
+    name(s). Normally returns a single-element list; returns all three beta
+    variants when beta == 'mixed' (intensity-diversity mode — the dataset then
+    picks one at random per sample from the already-rendered caches).
 
     For 'combined', returns the matching depth-aware variant — that's the
     expensive part worth caching. The photometric layer stays cheap and is
@@ -75,12 +84,21 @@ def fog_cache_variant_name(aug_cfg: dict) -> str | None:
     build_fog_transform), so it keeps its per-epoch randomness.
     """
     aug_type = aug_cfg.get("type", "none")
+
+    def _beta_variants(prefix: str) -> list[str]:
+        beta = aug_cfg["beta"]
+        if beta == "mixed":
+            return [f"{prefix}_{s}" for s in _BETA_SUFFIX.values()]
+        return [f"{prefix}_{_BETA_SUFFIX[beta]}"]
+
     if aug_type == "depth_aware":
-        return f"depthaware_{_BETA_SUFFIX[aug_cfg['beta']]}"
+        return _beta_variants("depthaware")
     if aug_type == "nn_depth":
-        return f"nn_depth_{_BETA_SUFFIX[aug_cfg['beta']]}"
+        return _beta_variants(_nn_depth_prefix(aug_cfg))
     if aug_type == "combined":
-        return f"depthaware_{_BETA_SUFFIX[aug_cfg['beta']]}"
+        technique = aug_cfg.get("depth_technique", "stereo")
+        prefix = "depthaware" if technique == "stereo" else _nn_depth_prefix(aug_cfg)
+        return [f"{prefix}_{_BETA_SUFFIX[aug_cfg['beta']]}"]
     return None
 
 
@@ -108,6 +126,8 @@ def build_fog_transform(aug_cfg: dict, use_cache: bool = False):
     if aug_type == "depth_aware":
         if use_cache:
             return None  # fully supplied by cache
+        if aug_cfg["beta"] == "mixed":
+            raise ValueError("beta: mixed requires use_fog_cache: true (reuses the 3 rendered caches)")
         from fog.koschmieder import KoschmiederFog
         return KoschmiederFog(beta=aug_cfg["beta"])
 
@@ -132,6 +152,8 @@ def build_fog_transform(aug_cfg: dict, use_cache: bool = False):
     if aug_type == "nn_depth":
         if use_cache:
             return None  # fully supplied by cache
+        if aug_cfg["beta"] == "mixed":
+            raise ValueError("beta: mixed requires use_fog_cache: true (reuses the 3 rendered caches)")
         from fog.nn_depth_fog import NNDepthFog
         return NNDepthFog(
             beta=aug_cfg["beta"],
@@ -223,16 +245,24 @@ def train(cfg: dict) -> None:
     # ── Datasets ───────────────────────────────────────────────────────────
     use_cache = cfg["data"].get("use_fog_cache", False)
     fog_cache_dir = None
+    fog_cache_dirs = None
     if use_cache:
-        variant = fog_cache_variant_name(cfg["augmentation"])
-        if variant is None:
+        variants = fog_cache_variant_names(cfg["augmentation"])
+        if variants is None:
             raise ValueError(
                 f"use_fog_cache=true but augmentation.type="
                 f"{cfg['augmentation'].get('type')!r} has no cache variant"
             )
         fog_cache_root = Path(cfg["data"].get("fog_cache_root", "data/fog_cache"))
-        fog_cache_dir = fog_cache_root / variant
-        log.info(f"Using fog cache: {fog_cache_dir}")
+        if len(variants) == 1:
+            fog_cache_dir = fog_cache_root / variants[0]
+            log.info(f"Using fog cache: {fog_cache_dir}")
+        else:
+            fog_cache_dirs = [fog_cache_root / v for v in variants]
+            log.info(f"Using mixed fog cache (random per sample): {fog_cache_dirs}")
+
+    fog_prob = cfg["augmentation"].get("fog_prob", 1.0)
+    log.info(f"fog_prob: {fog_prob}")
 
     need_depth = (not use_cache) and cfg["augmentation"].get("type") in ("depth_aware", "combined")
     fog_transform = build_fog_transform(cfg["augmentation"], use_cache=use_cache)
@@ -246,6 +276,8 @@ def train(cfg: dict) -> None:
         fog_transform=fog_transform,
         geo_transform=train_geo,
         fog_cache_dir=fog_cache_dir,
+        fog_cache_dirs=fog_cache_dirs,
+        fog_prob=fog_prob,
     )
     val_ds = CityscapesDataset(
         root=cfg["data"]["cityscapes_root"],

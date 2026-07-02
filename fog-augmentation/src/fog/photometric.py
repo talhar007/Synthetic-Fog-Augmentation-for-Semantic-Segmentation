@@ -13,6 +13,8 @@ so the two arms can be compared at nominally equivalent visibility.
 """
 from __future__ import annotations
 
+import random
+
 import albumentations as A
 import numpy as np
 
@@ -33,26 +35,37 @@ class PhotometricFog:
     `result['label']` (and any other keys) untouched.
 
     Args:
-        intensity: 'low' | 'medium' | 'high'
+        intensity: 'low' | 'medium' | 'high' | 'mixed' (randomly picks one of
+                   the three per call, for intensity-diversity within a run)
         p:         probability of applying fog (default 1.0 for deterministic augmentation)
     """
 
     def __init__(self, intensity: str = "medium", p: float = 1.0):
-        assert intensity in INTENSITIES, f"intensity must be one of {list(INTENSITIES)}"
-        params = INTENSITIES[intensity]
+        assert intensity == "mixed" or intensity in INTENSITIES, \
+            f"intensity must be 'mixed' or one of {list(INTENSITIES)}"
         self.intensity = intensity
-        self.transform = A.RandomFog(**params, p=p)
+        if intensity == "mixed":
+            self._transforms = {k: A.RandomFog(**v, p=p) for k, v in INTENSITIES.items()}
+            self.transform = None
+        else:
+            self._transforms = {intensity: A.RandomFog(**INTENSITIES[intensity], p=p)}
+            self.transform = self._transforms[intensity]
+
+    def _pick_transform(self) -> A.RandomFog:
+        if self.intensity == "mixed":
+            return random.choice(list(self._transforms.values()))
+        return self.transform
 
     def __call__(self, result: dict) -> dict:
         img = result["image"]  # H×W×3 uint8 RGB
-        augmented = self.transform(image=img)
+        augmented = self._pick_transform()(image=img)
         result["image"] = augmented["image"]
         # label and all other keys are intentionally unchanged
         return result
 
     def apply(self, img: np.ndarray) -> np.ndarray:
         """Convenience: apply to a bare numpy image (H×W×3 uint8)."""
-        return self.transform(image=img)["image"]
+        return self._pick_transform()(image=img)["image"]
 
     def __repr__(self) -> str:
         return f"PhotometricFog(intensity={self.intensity!r})"
