@@ -86,4 +86,10 @@ def plot_curves(experiments: list[str]):
 
 if __name__ == "__main__":
     FIG_DIR.mkdir(parents=True, exist_ok=True)
-    plot_curves(discover_experiments())
+    experiments = discover_experiments()
+    if not experiments:
+        raise SystemExit(
+            "No results/<experiment>/train.log files found — nothing to plot. "
+            "Refusing to overwrite the existing training_curves.png."
+        )
+    plot_curves(experiments)

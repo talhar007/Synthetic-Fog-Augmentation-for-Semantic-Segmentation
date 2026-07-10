@@ -15,7 +15,9 @@ import argparse
 import csv
 import json
 import math
+import shutil
 import time
+from datetime import datetime
 from pathlib import Path
 
 import albumentations as A
@@ -208,10 +210,34 @@ class PolynomialLR(torch.optim.lr_scheduler._LRScheduler):
 # Training
 # ──────────────────────────────────────────────────────────────────────────────
 
+def _archive_prior_run(out_dir: Path, resume: str | None) -> None:
+    """
+    Preserve run history: if out_dir already holds a previous run (checkpoints
+    and/or a train.log) and this is a fresh, non-resumed invocation, move the
+    existing contents into out_dir/history/<timestamp>/ before training
+    overwrites anything. Resumed runs (--resume passed) are left untouched
+    since they're meant to continue building on the current run in place.
+    """
+    if resume or not out_dir.exists():
+        return
+
+    prior_files = [f for f in out_dir.iterdir() if f.name != "history"]
+    has_prior_run = any(f.name in ("best.pth", "latest.pth", "train.log") for f in prior_files)
+    if not has_prior_run:
+        return
+
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    archive_dir = out_dir / "history" / stamp
+    archive_dir.mkdir(parents=True)
+    for f in prior_files:
+        shutil.move(str(f), str(archive_dir / f.name))
+    print(f"Archived previous run → {archive_dir}")
+
 def train(cfg: dict) -> None:
     seed_everything(cfg["experiment"]["seed"])
 
     out_dir = Path(cfg["training"]["output_dir"])
+    _archive_prior_run(out_dir, resume=cfg["training"].get("resume"))
     out_dir.mkdir(parents=True, exist_ok=True)
     log = get_logger(cfg["experiment"]["name"], log_file=str(out_dir / "train.log"))
 
@@ -239,6 +265,8 @@ def train(cfg: dict) -> None:
         cfg["model"]["mmseg_config"],
         checkpoint=pretrained_init,
         backend=backend,
+        encoder_name=cfg["model"].get("encoder_name", "resnet101"),
+        architecture=cfg["model"].get("architecture", "deeplabv3plus"),
     )
     model = model.to(device)
 

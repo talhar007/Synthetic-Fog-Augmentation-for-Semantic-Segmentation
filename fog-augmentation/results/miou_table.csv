@@ -1,12 +1,54 @@
 experiment,mIoU,family,is_original
 baseline,0.4143,baseline,True
+baseline_mitb2,0.5067,baseline,False
 combined,0.0346,combined,True
+combined_nndepth_p03,0.4617,combined,False
+combined_nndepth_p03_mitb2,0.5510,combined,False
+combined_p03,0.4384,combined,False
+combined_p03_mitb2,0.5412,combined,False
 depthaware_b0005,0.3807,depth_aware (stereo),True
+depthaware_b0005_p10,0.4589,depth_aware (stereo),False
+depthaware_b0005_p10_mitb2,0.5364,depth_aware (stereo),False
+depthaware_b0005_p30,0.4135,depth_aware (stereo),False
+depthaware_b0005_p30_mitb2,0.4879,depth_aware (stereo),False
+depthaware_b0005_p50,0.4365,depth_aware (stereo),False
+depthaware_b0005_p50_mitb2,0.5026,depth_aware (stereo),False
+depthaware_b0005_p70,0.3957,depth_aware (stereo),False
+depthaware_b0005_p70_mitb2,0.4628,depth_aware (stereo),False
 depthaware_b001,0.2734,depth_aware (stereo),True
+depthaware_b001_p03,0.4247,depth_aware (stereo),False
+depthaware_b001_p03_mitb2,0.5288,depth_aware (stereo),False
 depthaware_b002,0.2275,depth_aware (stereo),True
+depthaware_b002_p03,0.3934,depth_aware (stereo),False
+depthaware_b002_p03_mitb2,0.4786,depth_aware (stereo),False
+depthaware_mixed_p03,0.3250,depth_aware (stereo),False
+depthaware_mixed_p03_mitb2,0.5392,depth_aware (stereo),False
 nn_depth_b0005,0.3912,nn_depth,True
 nn_depth_b001,0.2667,nn_depth,True
 nn_depth_b002,0.2732,nn_depth,True
+nndepth_base_b0005_p10,0.4432,nn_depth,False
+nndepth_base_b0005_p10_mitb2,0.5389,nn_depth,False
+nndepth_base_b0005_p30,0.4780,nn_depth,False
+nndepth_base_b0005_p30_mitb2,0.5460,nn_depth,False
+nndepth_base_b0005_p50,0.4451,nn_depth,False
+nndepth_base_b0005_p50_mitb2,0.5769,nn_depth,False
+nndepth_base_b0005_p70,0.4464,nn_depth,False
+nndepth_base_b0005_p70_mitb2,0.5578,nn_depth,False
+nndepth_base_b001_p03,0.4727,nn_depth,False
+nndepth_base_b001_p03_mitb2,0.6034,nn_depth,False
+nndepth_base_b002_p03,0.4672,nn_depth,False
+nndepth_base_mixed_p03,0.4703,nn_depth,False
 photometric_high,0.0384,photometric,True
+photometric_high_p03,0.2882,photometric,False
 photometric_low,0.2318,photometric,True
+photometric_low_p10,0.4544,photometric,False
+photometric_low_p30,0.4657,photometric,False
+photometric_low_p50,0.4058,photometric,False
+photometric_low_p70,0.3934,photometric,False
 photometric_med,0.0853,photometric,True
+photometric_med_p03,0.3758,photometric,False
+photometric_mixed_p03,0.3297,photometric,False
+poc_mit_b2_baseline,0.5229,other,False
+poc_mit_b2_nndepth,0.5471,other,False
+poc_resnet101_baseline,0.4624,other,False
+poc_resnet101_nndepth,0.4463,other,False

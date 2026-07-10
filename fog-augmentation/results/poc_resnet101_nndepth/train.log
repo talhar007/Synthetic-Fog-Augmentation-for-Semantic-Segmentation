@@ -1,0 +1,171 @@
+[21:49:29 INFO] Device: cuda
+[21:49:32 INFO] Using fog cache: data/fog_cache/nn_depth_base_b0005
+[21:49:32 INFO] fog_prob: 0.3
+[21:49:34 INFO] Train: 2975 samples  |  Val: 500 samples
+[21:50:00 INFO] Epoch 1/10  iter 50/743  loss=1.4788  lr=5.96e-05
+[21:50:25 INFO] Epoch 1/10  iter 100/743  loss=1.2042  lr=5.92e-05
+[21:50:51 INFO] Epoch 1/10  iter 150/743  loss=0.8321  lr=5.88e-05
+[21:51:16 INFO] Epoch 1/10  iter 200/743  loss=0.7994  lr=5.84e-05
+[21:51:41 INFO] Epoch 1/10  iter 250/743  loss=1.2179  lr=5.80e-05
+[21:52:06 INFO] Epoch 1/10  iter 300/743  loss=0.6380  lr=5.76e-05
+[21:52:32 INFO] Epoch 1/10  iter 350/743  loss=0.6901  lr=5.72e-05
+[21:52:57 INFO] Epoch 1/10  iter 400/743  loss=0.3882  lr=5.68e-05
+[21:53:22 INFO] Epoch 1/10  iter 450/743  loss=0.3769  lr=5.64e-05
+[21:53:47 INFO] Epoch 1/10  iter 500/743  loss=0.4675  lr=5.60e-05
+[21:54:13 INFO] Epoch 1/10  iter 550/743  loss=0.6742  lr=5.56e-05
+[21:54:38 INFO] Epoch 1/10  iter 600/743  loss=0.3645  lr=5.51e-05
+[21:55:03 INFO] Epoch 1/10  iter 650/743  loss=0.7265  lr=5.47e-05
+[21:55:28 INFO] Epoch 1/10  iter 700/743  loss=1.0544  lr=5.43e-05
+[21:55:50 INFO] Epoch 1 complete — avg_loss=0.8212  time=377s
+[21:56:17 INFO] Epoch 2/10  iter 50/743  loss=0.7291  lr=5.36e-05
+[21:56:42 INFO] Epoch 2/10  iter 100/743  loss=0.3945  lr=5.32e-05
+[21:57:07 INFO] Epoch 2/10  iter 150/743  loss=0.2287  lr=5.28e-05
+[21:57:32 INFO] Epoch 2/10  iter 200/743  loss=0.2863  lr=5.24e-05
+[21:57:58 INFO] Epoch 2/10  iter 250/743  loss=0.2690  lr=5.20e-05
+[21:58:23 INFO] Epoch 2/10  iter 300/743  loss=0.6978  lr=5.16e-05
+[21:58:48 INFO] Epoch 2/10  iter 350/743  loss=0.6593  lr=5.12e-05
+[21:59:13 INFO] Epoch 2/10  iter 400/743  loss=0.3894  lr=5.08e-05
+[21:59:39 INFO] Epoch 2/10  iter 450/743  loss=0.4006  lr=5.04e-05
+[22:00:04 INFO] Epoch 2/10  iter 500/743  loss=0.3021  lr=5.00e-05
+[22:00:29 INFO] Epoch 2/10  iter 550/743  loss=0.4785  lr=4.96e-05
+[22:00:54 INFO] Epoch 2/10  iter 600/743  loss=0.4363  lr=4.91e-05
+[22:01:20 INFO] Epoch 2/10  iter 650/743  loss=0.2326  lr=4.87e-05
+[22:01:45 INFO] Epoch 2/10  iter 700/743  loss=0.1549  lr=4.83e-05
+[22:02:07 INFO] Epoch 2 complete — avg_loss=0.4177  time=376s
+[22:03:37 INFO]   val mIoU = 0.4850
+[22:03:38 INFO]   ★ New best val mIoU: 0.4850
+[22:04:05 INFO] Epoch 3/10  iter 50/743  loss=0.1821  lr=4.76e-05
+[22:04:30 INFO] Epoch 3/10  iter 100/743  loss=0.2016  lr=4.72e-05
+[22:04:55 INFO] Epoch 3/10  iter 150/743  loss=0.3915  lr=4.68e-05
+[22:05:20 INFO] Epoch 3/10  iter 200/743  loss=0.3273  lr=4.64e-05
+[22:05:45 INFO] Epoch 3/10  iter 250/743  loss=0.1634  lr=4.60e-05
+[22:06:11 INFO] Epoch 3/10  iter 300/743  loss=0.2779  lr=4.56e-05
+[22:06:36 INFO] Epoch 3/10  iter 350/743  loss=1.1515  lr=4.52e-05
+[22:07:01 INFO] Epoch 3/10  iter 400/743  loss=0.3118  lr=4.48e-05
+[22:07:26 INFO] Epoch 3/10  iter 450/743  loss=0.1959  lr=4.44e-05
+[22:07:52 INFO] Epoch 3/10  iter 500/743  loss=0.2911  lr=4.40e-05
+[22:08:17 INFO] Epoch 3/10  iter 550/743  loss=0.3753  lr=4.36e-05
+[22:08:42 INFO] Epoch 3/10  iter 600/743  loss=0.3628  lr=4.31e-05
+[22:09:07 INFO] Epoch 3/10  iter 650/743  loss=0.4296  lr=4.27e-05
+[22:09:33 INFO] Epoch 3/10  iter 700/743  loss=0.1869  lr=4.23e-05
+[22:09:54 INFO] Epoch 3 complete — avg_loss=0.3387  time=376s
+[22:10:21 INFO] Epoch 4/10  iter 50/743  loss=1.1624  lr=4.16e-05
+[22:10:46 INFO] Epoch 4/10  iter 100/743  loss=0.3099  lr=4.12e-05
+[22:11:12 INFO] Epoch 4/10  iter 150/743  loss=0.4974  lr=4.08e-05
+[22:11:37 INFO] Epoch 4/10  iter 200/743  loss=0.4542  lr=4.04e-05
+[22:12:02 INFO] Epoch 4/10  iter 250/743  loss=0.2822  lr=4.00e-05
+[22:12:28 INFO] Epoch 4/10  iter 300/743  loss=0.2180  lr=3.96e-05
+[22:12:53 INFO] Epoch 4/10  iter 350/743  loss=0.2603  lr=3.92e-05
+[22:13:18 INFO] Epoch 4/10  iter 400/743  loss=0.3202  lr=3.88e-05
+[22:13:43 INFO] Epoch 4/10  iter 450/743  loss=0.7042  lr=3.84e-05
+[22:14:08 INFO] Epoch 4/10  iter 500/743  loss=0.2192  lr=3.80e-05
+[22:14:34 INFO] Epoch 4/10  iter 550/743  loss=0.2732  lr=3.76e-05
+[22:14:59 INFO] Epoch 4/10  iter 600/743  loss=0.4265  lr=3.71e-05
+[22:15:24 INFO] Epoch 4/10  iter 650/743  loss=0.2965  lr=3.67e-05
+[22:15:49 INFO] Epoch 4/10  iter 700/743  loss=0.2562  lr=3.63e-05
+[22:16:11 INFO] Epoch 4 complete — avg_loss=0.3081  time=376s
+[22:17:44 INFO]   val mIoU = 0.5501
+[22:17:44 INFO]   ★ New best val mIoU: 0.5501
+[22:18:11 INFO] Epoch 5/10  iter 50/743  loss=0.3111  lr=3.56e-05
+[22:18:36 INFO] Epoch 5/10  iter 100/743  loss=0.1585  lr=3.52e-05
+[22:19:01 INFO] Epoch 5/10  iter 150/743  loss=0.1732  lr=3.48e-05
+[22:19:27 INFO] Epoch 5/10  iter 200/743  loss=0.6407  lr=3.44e-05
+[22:19:52 INFO] Epoch 5/10  iter 250/743  loss=0.1425  lr=3.40e-05
+[22:20:17 INFO] Epoch 5/10  iter 300/743  loss=0.3007  lr=3.36e-05
+[22:20:42 INFO] Epoch 5/10  iter 350/743  loss=0.3649  lr=3.32e-05
+[22:21:08 INFO] Epoch 5/10  iter 400/743  loss=0.1793  lr=3.28e-05
+[22:21:33 INFO] Epoch 5/10  iter 450/743  loss=0.2542  lr=3.24e-05
+[22:21:58 INFO] Epoch 5/10  iter 500/743  loss=0.2406  lr=3.20e-05
+[22:22:23 INFO] Epoch 5/10  iter 550/743  loss=0.4335  lr=3.16e-05
+[22:22:49 INFO] Epoch 5/10  iter 600/743  loss=0.1603  lr=3.11e-05
+[22:23:14 INFO] Epoch 5/10  iter 650/743  loss=0.4613  lr=3.07e-05
+[22:23:39 INFO] Epoch 5/10  iter 700/743  loss=0.4535  lr=3.03e-05
+[22:24:01 INFO] Epoch 5 complete — avg_loss=0.2869  time=376s
+[22:24:27 INFO] Epoch 6/10  iter 50/743  loss=0.1447  lr=2.96e-05
+[22:24:52 INFO] Epoch 6/10  iter 100/743  loss=0.1966  lr=2.92e-05
+[22:25:18 INFO] Epoch 6/10  iter 150/743  loss=0.2000  lr=2.88e-05
+[22:25:43 INFO] Epoch 6/10  iter 200/743  loss=0.2185  lr=2.84e-05
+[22:26:08 INFO] Epoch 6/10  iter 250/743  loss=0.3451  lr=2.80e-05
+[22:26:33 INFO] Epoch 6/10  iter 300/743  loss=0.4835  lr=2.76e-05
+[22:26:59 INFO] Epoch 6/10  iter 350/743  loss=0.2128  lr=2.72e-05
+[22:27:24 INFO] Epoch 6/10  iter 400/743  loss=0.1807  lr=2.68e-05
+[22:27:49 INFO] Epoch 6/10  iter 450/743  loss=0.1903  lr=2.64e-05
+[22:28:14 INFO] Epoch 6/10  iter 500/743  loss=0.1939  lr=2.60e-05
+[22:28:40 INFO] Epoch 6/10  iter 550/743  loss=0.1500  lr=2.56e-05
+[22:29:05 INFO] Epoch 6/10  iter 600/743  loss=0.2285  lr=2.51e-05
+[22:29:30 INFO] Epoch 6/10  iter 650/743  loss=0.3653  lr=2.47e-05
+[22:29:55 INFO] Epoch 6/10  iter 700/743  loss=0.1670  lr=2.43e-05
+[22:30:17 INFO] Epoch 6 complete — avg_loss=0.2557  time=375s
+[22:31:49 INFO]   val mIoU = 0.6192
+[22:31:50 INFO]   ★ New best val mIoU: 0.6192
+[22:32:16 INFO] Epoch 7/10  iter 50/743  loss=0.2073  lr=2.36e-05
+[22:32:42 INFO] Epoch 7/10  iter 100/743  loss=0.1057  lr=2.32e-05
+[22:33:07 INFO] Epoch 7/10  iter 150/743  loss=0.3226  lr=2.28e-05
+[22:33:32 INFO] Epoch 7/10  iter 200/743  loss=0.3506  lr=2.24e-05
+[22:33:57 INFO] Epoch 7/10  iter 250/743  loss=0.2683  lr=2.20e-05
+[22:34:23 INFO] Epoch 7/10  iter 300/743  loss=0.6570  lr=2.16e-05
+[22:34:48 INFO] Epoch 7/10  iter 350/743  loss=0.2561  lr=2.12e-05
+[22:35:13 INFO] Epoch 7/10  iter 400/743  loss=0.2039  lr=2.08e-05
+[22:35:38 INFO] Epoch 7/10  iter 450/743  loss=0.2326  lr=2.04e-05
+[22:36:04 INFO] Epoch 7/10  iter 500/743  loss=0.1053  lr=2.00e-05
+[22:36:29 INFO] Epoch 7/10  iter 550/743  loss=0.3186  lr=1.96e-05
+[22:36:54 INFO] Epoch 7/10  iter 600/743  loss=0.3583  lr=1.91e-05
+[22:37:20 INFO] Epoch 7/10  iter 650/743  loss=0.2738  lr=1.87e-05
+[22:37:45 INFO] Epoch 7/10  iter 700/743  loss=0.4036  lr=1.83e-05
+[22:38:06 INFO] Epoch 7 complete — avg_loss=0.2424  time=376s
+[22:38:33 INFO] Epoch 8/10  iter 50/743  loss=0.1293  lr=1.76e-05
+[22:38:58 INFO] Epoch 8/10  iter 100/743  loss=0.2608  lr=1.72e-05
+[22:39:23 INFO] Epoch 8/10  iter 150/743  loss=0.2092  lr=1.68e-05
+[22:39:49 INFO] Epoch 8/10  iter 200/743  loss=0.1999  lr=1.64e-05
+[22:40:14 INFO] Epoch 8/10  iter 250/743  loss=0.1262  lr=1.60e-05
+[22:40:39 INFO] Epoch 8/10  iter 300/743  loss=0.1653  lr=1.56e-05
+[22:41:04 INFO] Epoch 8/10  iter 350/743  loss=0.3068  lr=1.52e-05
+[22:41:29 INFO] Epoch 8/10  iter 400/743  loss=0.3082  lr=1.48e-05
+[22:41:55 INFO] Epoch 8/10  iter 450/743  loss=0.2288  lr=1.44e-05
+[22:42:20 INFO] Epoch 8/10  iter 500/743  loss=0.2897  lr=1.40e-05
+[22:42:45 INFO] Epoch 8/10  iter 550/743  loss=0.2902  lr=1.36e-05
+[22:43:10 INFO] Epoch 8/10  iter 600/743  loss=0.1462  lr=1.31e-05
+[22:43:35 INFO] Epoch 8/10  iter 650/743  loss=0.2237  lr=1.27e-05
+[22:44:01 INFO] Epoch 8/10  iter 700/743  loss=0.2778  lr=1.23e-05
+[22:44:23 INFO] Epoch 8 complete — avg_loss=0.2279  time=376s
+[22:45:55 INFO]   val mIoU = 0.6366
+[22:45:56 INFO]   ★ New best val mIoU: 0.6366
+[22:46:22 INFO] Epoch 9/10  iter 50/743  loss=0.2433  lr=1.16e-05
+[22:46:47 INFO] Epoch 9/10  iter 100/743  loss=0.2088  lr=1.12e-05
+[22:47:13 INFO] Epoch 9/10  iter 150/743  loss=0.2040  lr=1.08e-05
+[22:47:38 INFO] Epoch 9/10  iter 200/743  loss=0.1487  lr=1.04e-05
+[22:48:03 INFO] Epoch 9/10  iter 250/743  loss=0.2697  lr=9.97e-06
+[22:48:28 INFO] Epoch 9/10  iter 300/743  loss=0.1868  lr=9.57e-06
+[22:48:53 INFO] Epoch 9/10  iter 350/743  loss=0.1611  lr=9.17e-06
+[22:49:19 INFO] Epoch 9/10  iter 400/743  loss=0.2075  lr=8.76e-06
+[22:49:44 INFO] Epoch 9/10  iter 450/743  loss=0.1423  lr=8.36e-06
+[22:50:09 INFO] Epoch 9/10  iter 500/743  loss=0.2100  lr=7.95e-06
+[22:50:34 INFO] Epoch 9/10  iter 550/743  loss=0.3310  lr=7.55e-06
+[22:51:00 INFO] Epoch 9/10  iter 600/743  loss=0.1580  lr=7.15e-06
+[22:51:25 INFO] Epoch 9/10  iter 650/743  loss=0.1651  lr=6.74e-06
+[22:51:50 INFO] Epoch 9/10  iter 700/743  loss=0.1746  lr=6.34e-06
+[22:52:12 INFO] Epoch 9 complete — avg_loss=0.2258  time=375s
+[22:52:38 INFO] Epoch 10/10  iter 50/743  loss=0.5072  lr=5.59e-06
+[22:53:04 INFO] Epoch 10/10  iter 100/743  loss=0.1209  lr=5.18e-06
+[22:53:29 INFO] Epoch 10/10  iter 150/743  loss=0.2044  lr=4.78e-06
+[22:53:54 INFO] Epoch 10/10  iter 200/743  loss=0.1863  lr=4.38e-06
+[22:54:19 INFO] Epoch 10/10  iter 250/743  loss=0.0799  lr=3.97e-06
+[22:54:44 INFO] Epoch 10/10  iter 300/743  loss=0.2162  lr=3.57e-06
+[22:55:10 INFO] Epoch 10/10  iter 350/743  loss=0.2217  lr=3.17e-06
+[22:55:35 INFO] Epoch 10/10  iter 400/743  loss=0.3293  lr=2.76e-06
+[22:56:00 INFO] Epoch 10/10  iter 450/743  loss=0.2386  lr=2.36e-06
+[22:56:25 INFO] Epoch 10/10  iter 500/743  loss=0.1984  lr=1.95e-06
+[22:56:51 INFO] Epoch 10/10  iter 550/743  loss=0.1734  lr=1.55e-06
+[22:57:16 INFO] Epoch 10/10  iter 600/743  loss=0.1379  lr=1.15e-06
+[22:57:41 INFO] Epoch 10/10  iter 650/743  loss=0.3838  lr=7.43e-07
+[22:58:07 INFO] Epoch 10/10  iter 700/743  loss=0.1841  lr=3.39e-07
+[22:58:28 INFO] Epoch 10 complete — avg_loss=0.2102  time=376s
+[23:00:05 INFO]   val mIoU = 0.6483
+[23:00:05 INFO]   ★ New best val mIoU: 0.6483
+[23:00:06 INFO] Training complete. Best val mIoU = 0.6483
+[15:44:27 INFO] Device: cuda
+[15:44:32 INFO] Using fog cache: data/fog_cache/nn_depth_base_b0005
+[15:44:32 INFO] fog_prob: 0.3
+[15:44:33 INFO] Train: 2975 samples  |  Val: 500 samples
+[15:44:38 INFO] Resumed from epoch 10  best_mIoU=0.6483
+[15:44:38 INFO] Training complete. Best val mIoU = 0.6483

@@ -1,0 +1,37 @@
+experiment:
+  name: poc_mit_b2_baseline
+  seed: 42
+  description: "POC — MixTransformer-b2/FPN baseline, 10 epochs, no fog aug"
+
+augmentation:
+  type: none
+
+model:
+  mmseg_config: configs/_base_/deeplabv3plus_r101.py
+  num_classes: 19
+  encoder_name: mit_b2
+  architecture: fpn
+
+data:
+  cityscapes_root: /home/taah3149/Documents/Group_Studies/dataset/cityscapes
+  acdc_root: /home/taah3149/Documents/Group_Studies/dataset/acdc
+  img_size: [2048, 1024]
+  crop_size: [1024, 512]
+  scale_range: [0.5, 2.0]
+  batch_size: 4
+  num_workers: 4
+  use_fog_cache: false
+
+training:
+  epochs: 10
+  lr: 6.0e-5
+  weight_decay: 0.01
+  poly_power: 1.0
+  warmup_iters: 0
+  output_dir: results/poc_mit_b2_baseline
+  val_interval: 2
+  log_interval: 50
+  resume: null
+
+evaluate:
+  split: val

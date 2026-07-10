@@ -60,7 +60,12 @@ def evaluate(config_path: str, checkpoint: str, acdc_root: str | None, output: s
     log.info(f"Device: {device}")
 
     # ── Model ──────────────────────────────────────────────────────────────
-    model = build_model(cfg["model"]["mmseg_config"], checkpoint=checkpoint)
+    model = build_model(
+        cfg["model"]["mmseg_config"],
+        checkpoint=checkpoint,
+        encoder_name=cfg["model"].get("encoder_name", "resnet101"),
+        architecture=cfg["model"].get("architecture", "deeplabv3plus"),
+    )
     model = model.to(device)
     model.eval()
 

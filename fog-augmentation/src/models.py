@@ -41,11 +41,31 @@ def _detect_backend() -> str:
 # SMP backend (segmentation_models_pytorch)
 # ──────────────────────────────────────────────────────────────────────────────
 
-def _build_smp(num_classes: int = 19, checkpoint: Optional[str | Path] = None) -> nn.Module:
+_SMP_ARCHITECTURES = None  # populated lazily, see _build_smp
+
+
+def _build_smp(
+    num_classes: int = 19,
+    checkpoint: Optional[str | Path] = None,
+    encoder_name: str = "resnet101",
+    architecture: str = "deeplabv3plus",
+) -> nn.Module:
     import segmentation_models_pytorch as smp
 
-    model = smp.DeepLabV3Plus(
-        encoder_name="resnet101",
+    global _SMP_ARCHITECTURES
+    if _SMP_ARCHITECTURES is None:
+        # DeepLabV3Plus's ASPP needs a dilated encoder, which transformer
+        # encoders like mit_b* don't support (see smp's make_dilated) — FPN
+        # is the standard decoder pairing for mit_b* in smp instead.
+        _SMP_ARCHITECTURES = {
+            "deeplabv3plus": smp.DeepLabV3Plus,
+            "fpn": smp.FPN,
+            "unet": smp.Unet,
+            "manet": smp.MAnet,
+        }
+
+    model = _SMP_ARCHITECTURES[architecture](
+        encoder_name=encoder_name,
         encoder_weights="imagenet",
         classes=num_classes,
         activation=None,
@@ -99,23 +119,31 @@ def build_model(
     checkpoint: Optional[str | Path] = None,
     num_classes: int = 19,
     backend: str = "auto",
+    encoder_name: str = "resnet101",
+    architecture: str = "deeplabv3plus",
 ) -> nn.Module:
     """
-    Build DeepLabV3+ with pretrained weights.
+    Build a segmentation model with pretrained weights.
 
     Args:
         mmseg_config: path to MMSeg Python config (used only with backend='mmseg')
         checkpoint:   path to .pth file or None
         num_classes:  number of output classes (19 for Cityscapes/ACDC)
         backend:      'auto' | 'smp' | 'mmseg'
+        encoder_name: smp encoder id (backend='smp' only), e.g. 'resnet101',
+                      'mit_b0'..'mit_b5' (SegFormer's MixTransformer encoders)
+        architecture: smp decoder id (backend='smp' only): 'deeplabv3plus' (needs
+                      a dilation-capable encoder like resnet101), 'fpn'/'unet'/'manet'
+                      (required for mit_b* transformer encoders)
     """
     if backend == "auto":
         backend = _detect_backend()
 
-    print(f"Model backend: {backend}")
+    print(f"Model backend: {backend}" + (f" (encoder={encoder_name}, architecture={architecture})" if backend == "smp" else ""))
 
     if backend == "smp":
-        return _build_smp(num_classes=num_classes, checkpoint=checkpoint)
+        return _build_smp(num_classes=num_classes, checkpoint=checkpoint,
+                          encoder_name=encoder_name, architecture=architecture)
     elif backend == "mmseg":
         assert mmseg_config, "mmseg_config must be provided for backend='mmseg'"
         return _build_mmseg(mmseg_config, num_classes=num_classes, checkpoint=checkpoint)

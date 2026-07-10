@@ -38,7 +38,7 @@ CLASSES = [
 def _family(exp: str) -> str:
     """Coarse technique-family label parsed from the experiment name, for
     grouping/sorting in the summary table."""
-    if exp == "baseline":
+    if exp == "baseline" or exp.startswith("baseline_"):
         return "baseline"
     if exp.startswith("combined"):
         return "combined"

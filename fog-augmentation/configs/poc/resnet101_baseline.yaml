@@ -1,0 +1,38 @@
+experiment:
+  name: poc_resnet101_baseline
+  seed: 42
+  description: "POC — ResNet101/DeepLabV3+ baseline, 10 epochs, no fog aug"
+
+augmentation:
+  type: none
+
+model:
+  mmseg_config: configs/_base_/deeplabv3plus_r101.py
+  checkpoint: results/checkpoints/pretrained/deeplabv3plus_r101_cityscapes.pth
+  num_classes: 19
+  encoder_name: resnet101
+  architecture: deeplabv3plus
+
+data:
+  cityscapes_root: /home/taah3149/Documents/Group_Studies/dataset/cityscapes
+  acdc_root: /home/taah3149/Documents/Group_Studies/dataset/acdc
+  img_size: [2048, 1024]
+  crop_size: [1024, 512]
+  scale_range: [0.5, 2.0]
+  batch_size: 4
+  num_workers: 4
+  use_fog_cache: false
+
+training:
+  epochs: 10
+  lr: 6.0e-5
+  weight_decay: 0.01
+  poly_power: 1.0
+  warmup_iters: 0
+  output_dir: results/poc_resnet101_baseline
+  val_interval: 2
+  log_interval: 50
+  resume: null
+
+evaluate:
+  split: val

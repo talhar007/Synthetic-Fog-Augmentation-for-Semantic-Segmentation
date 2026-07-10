@@ -1,0 +1,43 @@
+augmentation:
+  beta: 0.005
+  fog_prob: 0.3
+  model_id: depth-anything/Depth-Anything-V2-Metric-Outdoor-Base-hf
+  type: nn_depth
+data:
+  acdc_root: /home/taah3149/Documents/Group_Studies/dataset/acdc
+  batch_size: 4
+  cityscapes_root: /home/taah3149/Documents/Group_Studies/dataset/cityscapes
+  crop_size:
+  - 1024
+  - 512
+  img_size:
+  - 2048
+  - 1024
+  num_workers: 4
+  scale_range:
+  - 0.5
+  - 2.0
+  use_fog_cache: true
+evaluate:
+  split: val
+experiment:
+  description: "POC \u2014 ResNet101/DeepLabV3+, NN-depth Base beta=0.005 fog_prob=0.3,\
+    \ 10 epochs"
+  name: poc_resnet101_nndepth_best
+  seed: 42
+model:
+  architecture: deeplabv3plus
+  checkpoint: results/checkpoints/pretrained/deeplabv3plus_r101_cityscapes.pth
+  encoder_name: resnet101
+  mmseg_config: configs/_base_/deeplabv3plus_r101.py
+  num_classes: 19
+training:
+  epochs: 10
+  log_interval: 50
+  lr: 6.0e-05
+  output_dir: results/poc_resnet101_nndepth
+  poly_power: 1.0
+  resume: results/poc_resnet101_nndepth/latest.pth
+  val_interval: 2
+  warmup_iters: 0
+  weight_decay: 0.01

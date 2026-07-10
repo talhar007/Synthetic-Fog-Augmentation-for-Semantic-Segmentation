@@ -25,11 +25,16 @@ FAMILY_COLOR = {
     "depthaware": "#DD8452",
     "combined": "#937860",
     "nn_depth": "#55A868",
+    "other": "#B0B0B0",
 }
 
 
 def family_of(name: str) -> str:
-    for fam in ("photometric", "depthaware", "nn_depth", "combined", "baseline"):
+    if name == "baseline" or name.startswith("baseline_"):
+        return "baseline"
+    if name.startswith("nndepth_base") or name.startswith("nn_depth"):
+        return "nn_depth"
+    for fam in ("photometric", "depthaware", "combined"):
         if name.startswith(fam):
             return fam
     return "other"
@@ -44,16 +49,16 @@ def plot_miou_bar():
     values = [float(r["mIoU"]) for r in rows]
     colors = [FAMILY_COLOR[family_of(n)] for n in names]
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(max(10, 0.45 * len(names)), 6))
     bars = ax.bar(names, values, color=colors)
     ax.set_ylabel("mIoU on ACDC Fog Val")
     ax.set_title("Fog Augmentation Comparison — ACDC Fog Val mIoU")
-    ax.set_xticklabels(names, rotation=45, ha="right")
+    ax.set_xticklabels(names, rotation=60, ha="right", fontsize=8)
     ax.set_ylim(0, max(values) * 1.15)
 
     for bar, v in zip(bars, values):
         ax.text(bar.get_x() + bar.get_width() / 2, v + 0.01, f"{v:.3f}",
-                 ha="center", va="bottom", fontsize=9)
+                 ha="center", va="bottom", fontsize=7, rotation=90)
 
     from matplotlib.patches import Patch
     handles = [Patch(color=c, label=fam) for fam, c in FAMILY_COLOR.items()]
@@ -79,18 +84,27 @@ def plot_per_class_heatmap():
             data.append([float(v) for v in row[1:]])
 
     data = np.array(data)
+    avg_miou = data.mean(axis=1, keepdims=True)
+    plot_data = np.hstack([data, avg_miou])
+    columns = classes + ["mIoU avg"]
 
-    fig, ax = plt.subplots(figsize=(14, 6))
-    im = ax.imshow(data, aspect="auto", cmap="RdYlGn", vmin=0, vmax=1)
-    ax.set_xticks(range(len(classes)))
-    ax.set_xticklabels(classes, rotation=45, ha="right")
+    fig, ax = plt.subplots(figsize=(14.8, max(6, 0.35 * len(names))))
+    im = ax.imshow(plot_data, aspect="auto", cmap="RdYlGn", vmin=0, vmax=1)
+    ax.set_xticks(range(len(columns)))
+    ax.set_xticklabels(columns, rotation=45, ha="right")
+    ax.get_xticklabels()[-1].set_fontweight("bold")
     ax.set_yticks(range(len(names)))
-    ax.set_yticklabels(names)
+    ax.set_yticklabels(names, fontsize=7)
     ax.set_title("Per-Class IoU on ACDC Fog Val")
+
+    # Separator between per-class columns and the aggregate mIoU column
+    ax.axvline(len(classes) - 0.5, color="black", linewidth=1.5)
 
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
-            ax.text(j, i, f"{data[i, j]:.2f}", ha="center", va="center", fontsize=6)
+            ax.text(j, i, f"{data[i, j]:.2f}", ha="center", va="center", fontsize=5)
+        ax.text(len(classes), i, f"{avg_miou[i, 0]:.3f}", ha="center", va="center",
+                 fontsize=6, fontweight="bold")
 
     fig.colorbar(im, ax=ax, label="IoU")
     plt.tight_layout()

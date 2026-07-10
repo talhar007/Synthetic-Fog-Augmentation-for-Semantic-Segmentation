@@ -44,7 +44,7 @@ for cfg in "${CONFIGS[@]}"; do
   latest="$out_dir/latest.pth"
 
   echo ""
-  if [[ -f "$out_dir/best.pth" ]] && grep -q "Training complete" "$log" 2>/dev/null; then
+  if [[ -f "$out_dir/acdc_eval.json" ]] || { [[ -f "$out_dir/best.pth" ]] && grep -q "Training complete" "$log" 2>/dev/null; }; then
     echo ">>> Skipping (already complete): $cfg"
     continue
   fi
