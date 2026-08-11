@@ -3,8 +3,11 @@ Backbone POC results — resnet101/DeepLabV3+ vs mit_b2/FPN (SegFormer's
 MixTransformer encoder), matched at 10 epochs each, at baseline (no fog) and
 our best full-sweep fog config (nndepth_base_b0005_p30 settings).
 
-Motivated by the ACDC paper's own finding (Sec 6.4/7.4) that transformer
-encoders generalize better than CNNs under domain shift.
+Motivated to try a transformer backbone (mit_b2/SegFormer) instead of the
+ACDC paper's own CNN-only architectures (DeepLabv2/v3+, RefineNet, DANet,
+HRNet — no transformer encoder is evaluated anywhere in that paper). This
+POC is the actual evidence: an empirical 10-epoch comparison, not a claim
+carried over from the ACDC paper.
 
 Generates:
   Generated_results/poc_backbone_comparison.png
@@ -12,12 +15,16 @@ Generates:
 Usage:
     python scripts/plot_poc_backbone_comparison.py
 """
+import sys
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _archive import archive_before_write
 
 OUT_DIR = Path(__file__).resolve().parent.parent / "Generated_results"
 
@@ -63,6 +70,7 @@ def plot():
     plt.tight_layout()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out = OUT_DIR / "poc_backbone_comparison.png"
+    archive_before_write(out)
     plt.savefig(out, dpi=150)
     plt.close()
     print(f"Saved → {out}")

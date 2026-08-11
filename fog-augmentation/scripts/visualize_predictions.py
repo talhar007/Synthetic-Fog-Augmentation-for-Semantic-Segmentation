@@ -18,12 +18,15 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+import yaml
 from albumentations.pytorch import ToTensorV2
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from data.acdc import ACDCDataset
 from data.cityscapes import CityscapesDataset
 from models import build_model, forward_eval
+from _archive import archive_before_write
 
 MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
@@ -39,10 +42,11 @@ _FALLBACK_EXPERIMENTS = [
 
 
 def select_experiments(results_dir: Path) -> list[str]:
-    """baseline + the best-mIoU experiment per technique family, read from
-    miou_table.csv (written by compile_results.py, which now tags each row
-    with a `family` column) — keeps this figure showing the current champion
-    per family instead of a name hardcoded before the sweep existed."""
+    """The best-mIoU experiment per technique family (including baseline),
+    read from miou_table.csv (written by compile_results.py, which tags each
+    row with a `family` column) — keeps this figure showing the current
+    champion per family (across all backbones) instead of a name hardcoded
+    before the sweep existed."""
     table_path = results_dir / "miou_table.csv"
     if not table_path.exists():
         return _FALLBACK_EXPERIMENTS
@@ -53,13 +57,25 @@ def select_experiments(results_dir: Path) -> list[str]:
             if row["mIoU"] == "N/A":
                 continue
             family, miou = row["family"], float(row["mIoU"])
-            if family == "baseline":
-                continue
             if family not in best_per_family or miou > best_per_family[family][1]:
                 best_per_family[family] = (row["experiment"], miou)
 
-    names = ["baseline"] + [name for name, _ in best_per_family.values()]
-    return names
+    # baseline first, then the rest in descending mIoU order
+    names = sorted(best_per_family, key=lambda f: (f != "baseline", -best_per_family[f][1]))
+    return [best_per_family[f][0] for f in names]
+
+
+def model_arch(results_dir: Path, name: str) -> tuple[str, str]:
+    """Read (encoder_name, architecture) that `name` was actually trained
+    with, from its saved config.yaml — defaults match the original
+    resnet101/DeepLabV3+ configs, which predate these keys existing."""
+    cfg_path = results_dir / name / "config.yaml"
+    if not cfg_path.exists():
+        return "resnet101", "deeplabv3plus"
+    with open(cfg_path) as f:
+        cfg = yaml.safe_load(f)
+    model_cfg = cfg.get("model", {})
+    return model_cfg.get("encoder_name", "resnet101"), model_cfg.get("architecture", "deeplabv3plus")
 
 
 def build_eval_transform() -> A.Compose:
@@ -95,13 +111,16 @@ def main():
         if not ckpt.exists():
             print(f"  skip {name} (no checkpoint)")
             continue
+        encoder_name, architecture = model_arch(results_dir, name)
         m = build_model(
             "configs/_base_/deeplabv3plus_r101.py",
             checkpoint=str(ckpt),
+            encoder_name=encoder_name,
+            architecture=architecture,
         ).to(device)
         m.eval()
         models[name] = m
-        print(f"  loaded {name}")
+        print(f"  loaded {name} (encoder={encoder_name}, architecture={architecture})")
 
     ncols = 2 + len(models)  # input, GT, + one column per model
     fig, axes = plt.subplots(len(indices), ncols, figsize=(4 * ncols, 4 * len(indices)))
@@ -134,6 +153,7 @@ def main():
 
     plt.tight_layout()
     Path(args.save).parent.mkdir(parents=True, exist_ok=True)
+    archive_before_write(args.save)
     plt.savefig(args.save, dpi=120)
     print(f"Saved → {args.save}")
 

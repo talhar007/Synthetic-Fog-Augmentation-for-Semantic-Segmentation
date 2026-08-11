@@ -38,6 +38,26 @@ for _k, _v in _ID_TO_TRAINID.items():
     if 0 <= _k < 256:
         _LABELID_TO_TRAINID_LUT[_k] = _v
 
+# 19 Cityscapes trainId classes, in trainId order (0-18) — same order as the
+# PALETTE below, so CLASSES[i] is always the name of PALETTE[i]'s class.
+CLASSES: list[str] = [
+    "road", "sidewalk", "building", "wall", "fence", "pole",
+    "traffic light", "traffic sign", "vegetation", "terrain", "sky",
+    "person", "rider", "car", "truck", "bus", "train", "motorcycle", "bicycle",
+]
+
+# Official Cityscapes trainId color palette (source: cityscapesscripts/helpers/labels.py).
+PALETTE = np.array(
+    [
+        [128, 64, 128], [244, 35, 232], [70, 70, 70], [102, 102, 156],
+        [190, 153, 153], [153, 153, 153], [250, 170, 30], [220, 220, 0],
+        [107, 142, 35], [152, 251, 152], [70, 130, 180], [220, 20, 60],
+        [255, 0, 0], [0, 0, 142], [0, 0, 70], [0, 60, 100],
+        [0, 80, 100], [0, 0, 230], [119, 11, 32],
+    ],
+    dtype=np.uint8,
+)
+
 
 def _convert_label_to_trainid(label_raw: np.ndarray) -> np.ndarray:
     """Map labelId PNG (raw 0-33) to 19-class trainId (0-18 + 255)."""
@@ -194,18 +214,8 @@ class CityscapesDataset(Dataset):
     @staticmethod
     def decode_target(label: np.ndarray) -> np.ndarray:
         """Map trainId 0-18 (+ 255) to a colour image for visualisation."""
-        palette = np.array(
-            [
-                [128, 64, 128], [244, 35, 232], [70, 70, 70], [102, 102, 156],
-                [190, 153, 153], [153, 153, 153], [250, 170, 30], [220, 220, 0],
-                [107, 142, 35], [152, 251, 152], [70, 130, 180], [220, 20, 60],
-                [255, 0, 0], [0, 0, 142], [0, 0, 70], [0, 60, 100],
-                [0, 80, 100], [0, 0, 230], [119, 11, 32],
-            ],
-            dtype=np.uint8,
-        )
         colour = np.zeros((*label.shape, 3), dtype=np.uint8)
-        for i, c in enumerate(palette):
+        for i, c in enumerate(PALETTE):
             colour[label == i] = c
         colour[label == 255] = [0, 0, 0]
         return colour

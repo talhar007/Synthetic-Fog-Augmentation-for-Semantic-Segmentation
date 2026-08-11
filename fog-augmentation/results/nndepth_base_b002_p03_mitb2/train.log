@@ -760,3 +760,16 @@
 [02:11:10 INFO] Epoch 50/50  iter 150/743  loss=0.0488  lr=9.56e-07
 [02:11:24 INFO] Epoch 50/50  iter 200/743  loss=0.1716  lr=8.75e-07
 [02:11:37 INFO] Epoch 50/50  iter 250/743  loss=0.1007  lr=7.95e-07
+[02:11:51 INFO] Epoch 50/50  iter 300/743  loss=0.1230  lr=7.14e-07
+[02:12:04 INFO] Epoch 50/50  iter 350/743  loss=0.1833  lr=6.33e-07
+[02:12:17 INFO] Epoch 50/50  iter 400/743  loss=0.1118  lr=5.52e-07
+[02:12:31 INFO] Epoch 50/50  iter 450/743  loss=0.0811  lr=4.72e-07
+[02:12:44 INFO] Epoch 50/50  iter 500/743  loss=0.1389  lr=3.91e-07
+[02:12:57 INFO] Epoch 50/50  iter 550/743  loss=0.1149  lr=3.10e-07
+[02:13:11 INFO] Epoch 50/50  iter 600/743  loss=0.0754  lr=2.29e-07
+[02:13:24 INFO] Epoch 50/50  iter 650/743  loss=0.1139  lr=1.49e-07
+[02:13:37 INFO] Epoch 50/50  iter 700/743  loss=0.1476  lr=6.78e-08
+[02:13:49 INFO] Epoch 50 complete — avg_loss=0.1459  time=199s
+[02:15:53 INFO]   val mIoU = 0.7707
+[02:15:53 INFO]   ★ New best val mIoU: 0.7707
+[02:15:54 INFO] Training complete. Best val mIoU = 0.7707

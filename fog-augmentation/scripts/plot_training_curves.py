@@ -14,11 +14,15 @@ Usage:
     python scripts/plot_training_curves.py
 """
 import re
+import sys
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _archive import archive_before_write
 
 RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 FIG_DIR = RESULTS_DIR / "figures"
@@ -79,6 +83,7 @@ def plot_curves(experiments: list[str]):
 
     plt.tight_layout()
     out = FIG_DIR / "training_curves.png"
+    archive_before_write(out)
     plt.savefig(out, dpi=150)
     plt.close()
     print(f"Saved → {out}")

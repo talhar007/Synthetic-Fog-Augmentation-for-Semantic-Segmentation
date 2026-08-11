@@ -15,7 +15,11 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _archive import archive_before_write
 
 # Experiments that predate fog_prob / mixed-intensity (README's original 11) —
 # kept as a labelled "before" group in the summary so the fix's effect is
@@ -54,9 +58,13 @@ def _family(exp: str) -> str:
 def discover_experiments(results_dir: Path) -> list[str]:
     """Every results/<name>/ with an acdc_eval.json, sorted with baseline
     first then alphabetically — picks up sweep results automatically, no
-    hardcoded list to keep in sync."""
+    hardcoded list to keep in sync.
+
+    Excludes poc_* dirs: those are 10-epoch backbone-POC smoke tests (see
+    results/poc_run.log), not comparable to the 50-epoch full-sweep runs."""
     names = sorted(
         p.parent.name for p in results_dir.glob("*/acdc_eval.json")
+        if not p.parent.name.startswith("poc_")
     )
     return sorted(names, key=lambda n: (n != "baseline", n))
 
@@ -80,6 +88,7 @@ def compile(results_dir: str = "results") -> None:
 
     # ── mIoU table (insertion order = discovery order) ─────────────────────────
     miou_path = rd / "miou_table.csv"
+    archive_before_write(miou_path)
     with open(miou_path, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["experiment", "mIoU", "family", "is_original"])
@@ -90,6 +99,7 @@ def compile(results_dir: str = "results") -> None:
 
     # ── Per-class table ───────────────────────────────────────────────────────
     pc_path = rd / "per_class_iou.csv"
+    archive_before_write(pc_path)
     with open(pc_path, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["experiment"] + CLASSES)
@@ -112,6 +122,7 @@ def compile(results_dir: str = "results") -> None:
     missing = [exp for exp, res in all_results.items() if res is None]
 
     md_path = rd / "summary.md"
+    archive_before_write(md_path)
     with open(md_path, "w") as f:
         f.write("# Results: mIoU on ACDC Fog Val\n\n")
         f.write("## All experiments, ranked\n\n")

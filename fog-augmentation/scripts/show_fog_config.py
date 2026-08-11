@@ -22,6 +22,12 @@ Usage:
         --config configs/sweep/photometric_low_p70.yaml \
         --cityscapes-root /home/taah3149/Documents/Group_Studies/dataset/cityscapes \
         --idx 0 --save /tmp/photometric_low_p70.png
+
+    # or pick a specific photo by filename instead of a numeric index:
+    python scripts/show_fog_config.py \
+        --config configs/sweep_mitb2/depthaware_b001_p03_mitb2.yaml \
+        --cityscapes-root /home/taah3149/Documents/Group_Studies/dataset/cityscapes \
+        --filename frankfurt_000001_007973 --save /tmp/that_photo.png
 """
 import argparse
 import sys
@@ -99,6 +105,10 @@ def main():
     parser.add_argument("--cityscapes-root", required=True)
     parser.add_argument("--split", default="val")
     parser.add_argument("--idx", type=int, default=0)
+    parser.add_argument("--filename", default=None,
+                         help="Substring of the Cityscapes image filename/stem (e.g. "
+                              "'frankfurt_000001_007973') to look up instead of --idx — "
+                              "use this when someone points at a specific photo.")
     parser.add_argument("--save", default=None, help="Defaults to <config_name>_fog_sample.png")
     args = parser.parse_args()
 
@@ -110,7 +120,19 @@ def main():
     save_path = Path(args.save) if args.save else Path(f"{name}_fog_sample.png")
 
     ds = CityscapesDataset(root=args.cityscapes_root, split=args.split, return_depth=True)
-    sample = ds[args.idx]
+
+    idx = args.idx
+    if args.filename:
+        matches = [i for i, s in enumerate(ds.samples) if args.filename in s["img"].name]
+        if not matches:
+            raise SystemExit(f"No image matching '{args.filename}' found in split={args.split}")
+        if len(matches) > 1:
+            names = "\n  ".join(ds.samples[i]["img"].name for i in matches)
+            raise SystemExit(f"'{args.filename}' matches {len(matches)} images, be more specific:\n  {names}")
+        idx = matches[0]
+
+    sample = ds[idx]
+    print(f"Using image: {ds.samples[idx]['img']}")
 
     panels = [("Clear (input)", sample["image"])] + render(aug_cfg, sample)
 

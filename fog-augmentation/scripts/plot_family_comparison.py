@@ -14,11 +14,15 @@ Usage:
     python scripts/plot_family_comparison.py
 """
 import csv
+import sys
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _archive import archive_before_write
 
 RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 OUT_DIR = Path(__file__).resolve().parent.parent / "Generated_results"
@@ -72,6 +76,7 @@ def plot():
     plt.tight_layout()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out = OUT_DIR / "technique_family_comparison.png"
+    archive_before_write(out)
     plt.savefig(out, dpi=150)
     plt.close()
     print(f"Saved → {out}")

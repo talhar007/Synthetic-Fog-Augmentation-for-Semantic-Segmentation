@@ -1,11 +1,12 @@
 """
 Side-by-side comparison of every fog generation technique used in the sweep,
-on one source image, each at its best-performing config from results/summary.md:
-  - Photometric low            (photometric_low_p30, 0.4657 mIoU)
-  - Depth-aware stereo, β=0.005 (depthaware_b0005_p10, 0.4589 mIoU)
-  - NN-depth (Base model), β=0.005 (nndepth_base_b0005_p30, 0.4780 mIoU — best overall)
-  - Combined: stereo + photometric low   (combined_p03, 0.4384 mIoU)
-  - Combined: NN-depth (Base) + photometric low (combined_nndepth_p03, 0.4617 mIoU)
+on one source image, each at its current best-performing config per family
+(from results/summary.md, mit_b2/FPN backbone resweep):
+  - Photometric medium          (photometric_med_p03_mitb2, 0.5657 mIoU)
+  - Depth-aware stereo, mixed β  (depthaware_mixed_p03_mitb2, 0.5392 mIoU;
+    rendered at β=0.01, the middle of the 3 β values 'mixed' samples from)
+  - NN-depth (Base model), β=0.01 (nndepth_base_b001_p03_mitb2, 0.6034 mIoU — best overall)
+  - Combined: NN-depth (Base, β=0.005) + photometric low (combined_nndepth_p03_mitb2, 0.5510 mIoU)
 
 Usage:
     python scripts/visualize_all_techniques.py \
@@ -21,11 +22,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from data.cityscapes import CityscapesDataset
 from fog.photometric import PhotometricFog
 from fog.depth import disparity_to_depth, complete_depth
 from fog.koschmieder import KoschmiederFog
 from fog.nn_depth_fog import NNDepthFog
+from _archive import archive_before_write
 
 NN_DEPTH_BASE_MODEL = "depth-anything/Depth-Anything-V2-Metric-Outdoor-Base-hf"
 
@@ -42,25 +45,24 @@ def main():
     sample = ds[args.idx]
     img = sample["image"]
 
-    photo_img = PhotometricFog("low").apply(img)
+    photo_img = PhotometricFog("medium").apply(img)
 
     depth = disparity_to_depth(sample["raw_disp"], sample["camera"])
     depth = complete_depth(depth, img)
-    depthaware_img = KoschmiederFog(beta=0.005).apply(img, depth)
+    depthaware_img = KoschmiederFog(beta=0.01).apply(img, depth)
 
-    nn_depth_fogger = NNDepthFog(beta=0.005, model_id=NN_DEPTH_BASE_MODEL)
+    nn_depth_fogger = NNDepthFog(beta=0.01, model_id=NN_DEPTH_BASE_MODEL)
     nn_depth_img = nn_depth_fogger.apply(img)
 
-    combined_stereo_img = PhotometricFog("low").apply(depthaware_img)
-    combined_nndepth_img = PhotometricFog("low").apply(nn_depth_img)
+    combined_nndepth_fogger = NNDepthFog(beta=0.005, model_id=NN_DEPTH_BASE_MODEL)
+    combined_nndepth_img = PhotometricFog("low").apply(combined_nndepth_fogger.apply(img))
 
     panels = [
         ("Clear\n(input)", img),
-        ("Photometric\n(low)\n0.4657 mIoU", photo_img),
-        ("Depth-aware\n(stereo, β=0.005)\n0.4589 mIoU", depthaware_img),
-        ("NN-depth\n(Base model, β=0.005)\n0.4780 mIoU — best", nn_depth_img),
-        ("Combined\n(stereo + photometric)\n0.4384 mIoU", combined_stereo_img),
-        ("Combined\n(NN-depth + photometric)\n0.4617 mIoU", combined_nndepth_img),
+        ("Photometric\n(medium)\n0.5657 mIoU", photo_img),
+        ("Depth-aware\n(stereo, mixed β — shown at 0.01)\n0.5392 mIoU", depthaware_img),
+        ("NN-depth\n(Base model, β=0.01)\n0.6034 mIoU — best", nn_depth_img),
+        ("Combined\n(NN-depth β=0.005 + photometric low)\n0.5510 mIoU", combined_nndepth_img),
     ]
 
     fig, axes = plt.subplots(1, len(panels), figsize=(4.6 * len(panels), 5.2))
@@ -69,9 +71,10 @@ def main():
         ax.set_title(title, fontsize=10)
         ax.axis("off")
 
-    plt.suptitle("All Fog Augmentation Techniques — Same Source Image (mIoU = best sweep config)", fontsize=13)
+    plt.suptitle("All Fog Augmentation Techniques — Same Source Image (mIoU = current best sweep config, mit_b2/FPN)", fontsize=13)
     plt.tight_layout()
     Path(args.save).parent.mkdir(parents=True, exist_ok=True)
+    archive_before_write(args.save)
     plt.savefig(args.save, dpi=150)
     print(f"Saved → {args.save}")
 

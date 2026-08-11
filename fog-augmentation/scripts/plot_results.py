@@ -9,12 +9,16 @@ Usage:
     python scripts/plot_results.py
 """
 import csv
+import sys
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _archive import archive_before_write
 
 RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 FIG_DIR = RESULTS_DIR / "figures"
@@ -66,6 +70,7 @@ def plot_miou_bar():
 
     plt.tight_layout()
     out = FIG_DIR / "miou_comparison.png"
+    archive_before_write(out)
     plt.savefig(out, dpi=150)
     plt.close()
     print(f"Saved → {out}")
@@ -109,6 +114,7 @@ def plot_per_class_heatmap():
     fig.colorbar(im, ax=ax, label="IoU")
     plt.tight_layout()
     out = FIG_DIR / "per_class_heatmap.png"
+    archive_before_write(out)
     plt.savefig(out, dpi=150)
     plt.close()
     print(f"Saved → {out}")
