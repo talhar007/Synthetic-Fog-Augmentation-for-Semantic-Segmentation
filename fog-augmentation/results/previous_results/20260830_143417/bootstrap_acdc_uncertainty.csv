@@ -1,0 +1,6 @@
+experiment,official_miou,bootstrap_mean,bootstrap_std,ci95_lo,ci95_hi
+baseline,0.4048,0.3994,0.0258,0.3496,0.4492
+baseline_mitb2,0.4925,0.4861,0.0215,0.4411,0.5264
+nndepth_base_b001_p03_mitb2,0.5842,0.5641,0.0253,0.5083,0.6055
+photometric_med_p03_mitb2,0.5495,0.5362,0.0243,0.4842,0.5804
+depthaware_mixed_p03_mitb2,0.5227,0.5055,0.0247,0.4567,0.5507

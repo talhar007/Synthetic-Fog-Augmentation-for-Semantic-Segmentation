@@ -1,0 +1,12 @@
+experiment,clear_cityscapes_val_miou,matched_fog_cityscapes_val_miou,delta_fog_minus_clear
+baseline,0.7688,0.7688,0.0
+photometric_low,0.6741,0.7075,0.0334
+photometric_med,0.3432,0.5937,0.2505
+photometric_high,0.2854,0.3605,0.0751
+depthaware_b0005,0.7245,0.7471,0.0226
+depthaware_b001,0.6665,0.7292,0.0627
+depthaware_b002,0.5772,0.7225,0.1453
+nn_depth_b0005,0.657,0.7484,0.0913
+nn_depth_b001,0.581,0.7371,0.1561
+nn_depth_b002,0.4426,0.6855,0.2428
+combined,0.2695,0.5761,0.3066
